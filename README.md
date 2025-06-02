@@ -27,9 +27,22 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 ## 📁 Project Structure
 
 ECommerceApp/
-├── ECommerceApp.Api         // Backend Web API (.NET 8.0)
-├── ECommerceApp.Web         // Frontend Razor Pages (Tailwind CSS)
-├── docker-compose.yml       // Docker orchestration
+├── ECommerceApp.Api/         ──▶ [Backend Web API (.NET 8.0)](./ECommerceApp.Api)
+│   ├── Controllers/          ──▶ [API endpoints](./ECommerceApp.Api/Controllers)
+│   ├── Models/               ──▶ [Entity models](./ECommerceApp.Api/Models)
+│   ├── DTOs/                 ──▶ [Data transfer objects](./ECommerceApp.Api/DTOs)
+│   ├── Services/             ──▶ [Business logic](./ECommerceApp.Api/Services)
+│   └── appsettings.json      ──▶ [App config](./ECommerceApp.Api/appsettings.json)
+│
+├── ECommerceApp.Web/         ──▶ [Frontend Razor Pages](./ECommerceApp.Web)
+│   ├── Pages/                ──▶ [Razor views](./ECommerceApp.Web/Pages)
+│   ├── wwwroot/              ──▶ [Static files](./ECommerceApp.Web/wwwroot)
+│   └── tailwind.config.js    ──▶ [Tailwind config](./ECommerceApp.Web/tailwind.config.js)
+│
+├── docker-compose.yml        ──▶ [Docker Orchestration](./docker-compose.yml)
+├── README.md                 ──▶ [This file](./README.md)
+└── ECommerceApp.sln          ──▶ [Solution file](./ECommerceApp.sln)
+
 
 
 
@@ -52,6 +65,8 @@ API: https://localhost:7241
 
 Swagger UI: https://localhost:7241/swagger
 
+---
+
 💻 Running Locally (Visual Studio)
 Clone the repository
 
@@ -62,6 +77,8 @@ Update the appsettings.json connection string if necessary
 Set both projects (Api and Web) as startup projects
 
 Press F5 to launch
+
+---
 
 📡 API Endpoints
 
@@ -88,6 +105,8 @@ Press F5 to launch
 | DELETE | `/api/cart/{userId}`                      | Clear the cart       |
 
 
+---
+
 🔧 Development Guide
 🔄 Migrations
 To generate and apply EF Core migrations:
@@ -96,6 +115,8 @@ To generate and apply EF Core migrations:
 cd ECommerceApp.Api
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+---
 
 ➕ Adding Features
 Define models & DTOs
@@ -108,6 +129,8 @@ Test functionality
 
 Update the README!
 
+---
+
 🤝 Contributing
 We welcome contributions! Here's how to get started:
 
@@ -119,8 +142,12 @@ Commit your changes
 
 Push and submit a pull request
 
+---
+
 📄 License
 This project is licensed under the MIT License — see the LICENSE file for details.
+
+---
 
 💬 Let's Connect
 Have questions, ideas, or feedback? Feel free to open an Issue or start a discussion.
