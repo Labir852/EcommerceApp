@@ -31,9 +31,6 @@ ECommerceApp/
 ├── ECommerceApp.Web // Frontend Razor Pages (Tailwind CSS)
 ├── docker-compose.yml // Docker orchestration
 
-yaml
-Copy
-Edit
 
 ---
 
@@ -66,32 +63,39 @@ Set both projects (Api and Web) as startup projects
 Press F5 to launch
 
 📡 API Endpoints
-🧾 Products
-Method	Endpoint	Description
-GET	/api/products	List with filters
-GET	/api/products/{id}	Get specific product
-POST	/api/products	Create a product
-PUT	/api/products/{id}	Update a product
-DELETE	/api/products/{id}	Delete a product
 
-🛍️ Cart
-Method	Endpoint	Description
-GET	/api/cart/{userId}	Get user's cart
-POST	/api/cart/{userId}/items	Add item to cart
-PUT	/api/cart/{userId}/items/{itemId}	Update item quantity
-DELETE	/api/cart/{userId}/items/{itemId}	Remove an item
-DELETE	/api/cart/{userId}	Clear the cart
+
+### 🧾 Products
+
+| Method | Endpoint                    | Description          |
+|--------|-----------------------------|----------------------|
+| GET    | `/api/products`             | List with filters    |
+| GET    | `/api/products/{id}`        | Get specific product |
+| POST   | `/api/products`             | Create a product     |
+| PUT    | `/api/products/{id}`        | Update a product     |
+| DELETE | `/api/products/{id}`        | Delete a product     |
+
+
+### 🛍️ Cart
+
+| Method | Endpoint                                  | Description          |
+|--------|-------------------------------------------|----------------------|
+| GET    | `/api/cart/{userId}`                      | Get user's cart      |
+| POST   | `/api/cart/{userId}/items`                | Add item to cart     |
+| PUT    | `/api/cart/{userId}/items/{itemId}`       | Update item quantity |
+| DELETE | `/api/cart/{userId}/items/{itemId}`       | Remove an item       |
+| DELETE | `/api/cart/{userId}`                      | Clear the cart       |
+
 
 🔧 Development Guide
 🔄 Migrations
 To generate and apply EF Core migrations:
 
-bash
-Copy
-Edit
+```bash
 cd ECommerceApp.Api
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
 ➕ Adding Features
 Define models & DTOs
 
@@ -122,13 +126,4 @@ Have questions, ideas, or feedback? Feel free to open an Issue or start a discus
 
 Made with ❤️ using .NET 8, Razor Pages & Docker
 
-yaml
-Copy
-Edit
-
 ---
-
-Let me know if you want to:
-- Add a project logo or badge section (CI, Docker, MIT, etc.)
-- Embed a demo video or GIF
-- Automatically generate API documentation from Swagger JSON
