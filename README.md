@@ -83,8 +83,9 @@ Press F5 to launch
 
 ## 📡 API Endpoints
 
+## 🧾 Products
 <div align="center">
-### 🧾 Products
+
 
 | Method | Endpoint                    | Description          |
 |--------|-----------------------------|----------------------|
@@ -95,8 +96,9 @@ Press F5 to launch
 | DELETE | `/api/products/{id}`        | Delete a product     |
 </div>
 
+## 🛍️ Cart
 <div align="center">
-### 🛍️ Cart
+
 
 | Method | Endpoint                                  | Description          |
 |--------|-------------------------------------------|----------------------|
@@ -117,6 +119,8 @@ To generate and apply EF Core migrations:
 cd ECommerceApp.Api
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+
 
 ---
 
