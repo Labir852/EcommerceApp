@@ -27,9 +27,10 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 ## 📁 Project Structure
 
 ECommerceApp/
-├── ECommerceApp.Api // Backend Web API (.NET 8.0)
-├── ECommerceApp.Web // Frontend Razor Pages (Tailwind CSS)
-├── docker-compose.yml // Docker orchestration
+├── ECommerceApp.Api         // Backend Web API (.NET 8.0)
+├── ECommerceApp.Web         // Frontend Razor Pages (Tailwind CSS)
+├── docker-compose.yml       // Docker orchestration
+
 
 
 ---
