@@ -53,8 +53,11 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 ```markdown
 ```bash
 docker-compose build
-docker-compose up```
-🌐 Access the apps:
+docker-compose up
+
+---
+
+## 🌐 Access the apps:
 
 Web UI: https://localhost:7240
 
