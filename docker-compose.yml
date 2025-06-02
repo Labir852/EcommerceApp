@@ -6,6 +6,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Express
     ports:
       - "1433:1433"
     volumes:
@@ -20,10 +21,9 @@ services:
       target: api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=sql;Database=ECommerceApp;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
     ports:
-      - "7241:443"
       - "5241:80"
     depends_on:
       - sql
@@ -37,18 +37,18 @@ services:
       target: web
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
+      - ApiBaseUrl=http://api
     ports:
-      - "7240:443"
       - "5240:80"
     depends_on:
       - api
     networks:
       - ecommerce-network
 
-volumes:
-  sqldata:
-
 networks:
   ecommerce-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  sqldata: 

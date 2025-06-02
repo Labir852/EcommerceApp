@@ -1,4 +1,5 @@
 @page
+@using ECommerceApp.Shared.Models
 @model CartModel
 @{
     ViewData["Title"] = "Shopping Cart";
@@ -77,18 +78,18 @@
                     <div class="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
                         <div class="text-right">
-                            @if (Model.Cart.DiscountedTotalPrice < Model.Cart.TotalPrice)
+                            @if (Model.Cart?.DiscountedTotalPrice < Model.Cart?.TotalPrice)
                             {
                                 <p class="line-through text-sm text-gray-500">
-                                    $@Model.Cart.TotalPrice.ToString("F2")
+                                    $@Model.Cart?.TotalPrice.ToString("F2")
                                 </p>
                                 <p class="text-sm font-medium text-red-600">
-                                    $@Model.Cart.DiscountedTotalPrice?.ToString("F2")
+                                    $@Model.Cart?.DiscountedTotalPrice?.ToString("F2")
                                 </p>
                             }
                             else
                             {
-                                <p>$@Model.Cart.TotalPrice.ToString("F2")</p>
+                                <p>$@Model.Cart?.TotalPrice.ToString("F2")</p>
                             }
                         </div>
                     </div>

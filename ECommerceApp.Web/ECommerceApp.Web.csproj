@@ -12,7 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECommerceApp.Api\ECommerceApp.Api.csproj" />
+    <ProjectReference Include="..\ECommerceApp.Shared\ECommerceApp.Shared.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GenerateStaticWebAssetsManifest>true</GenerateStaticWebAssetsManifest>
+  </PropertyGroup>
 
 </Project>

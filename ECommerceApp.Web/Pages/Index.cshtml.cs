@@ -1,29 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
-using ECommerceApp.Api.Models.DTOs;
+using ECommerceApp.Shared.Models;
 
 namespace ECommerceApp.Web.Pages;
 
 public class IndexModel : PageModel
 {
+    private readonly ILogger<IndexModel> _logger;
     private readonly IHttpClientFactory _clientFactory;
-    private readonly IConfiguration _configuration;
 
-    public ProductListDto Products { get; set; } = new();
+    public ProductSearchResultDto? Products { get; set; }
     public string? SearchTerm { get; set; }
     public string? SortBy { get; set; }
     public bool SortDescending { get; set; }
     public int CurrentPage { get; set; } = 1;
-    public const int PageSize = 9;
+    public int PageSize { get; set; } = 9;
 
-    public IndexModel(IHttpClientFactory clientFactory, IConfiguration configuration)
+    public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory clientFactory)
     {
+        _logger = logger;
         _clientFactory = clientFactory;
-        _configuration = configuration;
     }
 
-    public async Task OnGetAsync(string? searchTerm, string? sortBy, bool sortDescending = false, int page = 1)
+    public async Task OnGetAsync(string? searchTerm = null, string? sortBy = null, bool sortDescending = false, int page = 1)
     {
         SearchTerm = searchTerm;
         SortBy = sortBy;
@@ -31,27 +31,26 @@ public class IndexModel : PageModel
         CurrentPage = page;
 
         var client = _clientFactory.CreateClient("API");
-        var response = await client.GetAsync(
-            $"api/products?searchTerm={searchTerm}&sortBy={sortBy}&sortDescending={sortDescending}&page={page}&pageSize={PageSize}");
+        var response = await client.GetAsync($"api/products?searchTerm={searchTerm}&sortBy={sortBy}&sortDescending={sortDescending}&page={page}&pageSize={PageSize}");
 
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            Products = JsonSerializer.Deserialize<ProductListDto>(content, new JsonSerializerOptions
+            Products = JsonSerializer.Deserialize<ProductSearchResultDto>(content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) ?? new ProductListDto();
+            });
         }
     }
 
-    public async Task<IActionResult> OnPostAddToCartAsync(int productId, int quantity)
+    public async Task<IActionResult> OnPostAddToCartAsync(int productId)
     {
         var client = _clientFactory.CreateClient("API");
         var userId = "demo-user"; // In a real app, get this from authentication
 
         var response = await client.PostAsJsonAsync(
             $"api/cart/{userId}/items",
-            new AddToCartDto { ProductId = productId, Quantity = quantity });
+            new { ProductId = productId, Quantity = 1 });
 
         if (response.IsSuccessStatusCode)
         {

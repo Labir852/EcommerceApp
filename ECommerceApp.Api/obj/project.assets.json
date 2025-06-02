@@ -1583,6 +1583,16 @@
             "rid": "win"
           }
         }
+      },
+      "ECommerceApp.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/ECommerceApp.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ECommerceApp.Shared.dll": {}
+        }
       }
     }
   },
@@ -4462,10 +4472,16 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "ECommerceApp.Shared/1.0.0": {
+      "type": "project",
+      "path": "../ECommerceApp.Shared/ECommerceApp.Shared.csproj",
+      "msbuildProject": "../ECommerceApp.Shared/ECommerceApp.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "ECommerceApp.Shared >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 8.0.0",
       "Microsoft.EntityFrameworkCore >= 8.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.0",
@@ -4474,23 +4490,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\labir\\.nuget\\packages\\": {},
+    "C:\\Users\\Tanvir Anjum Labir\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Api\\ECommerceApp.Api.csproj",
+      "projectUniqueName": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Api\\ECommerceApp.Api.csproj",
       "projectName": "ECommerceApp.Api",
-      "projectPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Api\\ECommerceApp.Api.csproj",
-      "packagesPath": "C:\\Users\\labir\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Api\\obj\\",
+      "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Api\\ECommerceApp.Api.csproj",
+      "packagesPath": "C:\\Users\\Tanvir Anjum Labir\\.nuget\\packages\\",
+      "outputPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "D:\\Miscellaneous\\NuGet.Config",
+        "C:\\Users\\Tanvir Anjum Labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4504,7 +4521,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
+              "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
