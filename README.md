@@ -50,9 +50,11 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 1. Clone the repository  
 2. Open a terminal in the root directory  
 3. Run the app:
-```bash
+   ```bash
 docker-compose build
 docker-compose up
+
+
 
 ---
 
