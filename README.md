@@ -26,22 +26,20 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 
 ## 📁 Project Structure
 
-ECommerceApp/
-├── ECommerceApp.Api/         ──▶ [Backend Web API (.NET 8.0)](./ECommerceApp.Api)
-│   ├── Controllers/          ──▶ [API endpoints](./ECommerceApp.Api/Controllers)
-│   ├── Models/               ──▶ [Entity models](./ECommerceApp.Api/Models)
-│   ├── DTOs/                 ──▶ [Data transfer objects](./ECommerceApp.Api/DTOs)
-│   ├── Services/             ──▶ [Business logic](./ECommerceApp.Api/Services)
-│   └── appsettings.json      ──▶ [App config](./ECommerceApp.Api/appsettings.json)
-│
-├── ECommerceApp.Web/         ──▶ [Frontend Razor Pages](./ECommerceApp.Web)
-│   ├── Pages/                ──▶ [Razor views](./ECommerceApp.Web/Pages)
-│   ├── wwwroot/              ──▶ [Static files](./ECommerceApp.Web/wwwroot)
-│   └── tailwind.config.js    ──▶ [Tailwind config](./ECommerceApp.Web/tailwind.config.js)
-│
-├── docker-compose.yml        ──▶ [Docker Orchestration](./docker-compose.yml)
-├── README.md                 ──▶ [This file](./README.md)
-└── ECommerceApp.sln          ──▶ [Solution file](./ECommerceApp.sln)
+- [ECommerceApp.Api](./ECommerceApp.Api) — Backend Web API (.NET 8.0)
+  - [Controllers](./ECommerceApp.Api/Controllers) — API endpoints
+  - [Models](./ECommerceApp.Api/Models) — Entity models
+  - [DTOs](./ECommerceApp.Api/DTOs) — Data transfer objects
+  - [Services](./ECommerceApp.Api/Services) — Business logic
+  - [appsettings.json](./ECommerceApp.Api/appsettings.json) — Configuration
+- [ECommerceApp.Web](./ECommerceApp.Web) — Frontend Razor Pages
+  - [Pages](./ECommerceApp.Web/Pages) — Razor views
+  - [wwwroot](./ECommerceApp.Web/wwwroot) — Static files
+  - [tailwind.config.js](./ECommerceApp.Web/tailwind.config.js) — Tailwind config
+- [docker-compose.yml](./docker-compose.yml) — Docker orchestration
+- [README.md](./README.md) — This file
+- [ECommerceApp.sln](./ECommerceApp.sln) — Solution file
+
 
 
 
