@@ -2,7 +2,6 @@
 
 A **modern full-stack e-commerce application** built with **.NET 8.0**, featuring a RESTful Web API backend and Razor Pages frontend. Seamlessly manage products, handle shopping carts, and apply time-based discounts — all within a beautiful, responsive UI styled with **Tailwind CSS**. Docker support makes deployment effortless.
 
-![ECommerceApp Screenshot](https://via.placeholder.com/1000x400?text=ECommerceApp+Preview)
 
 ---
 
@@ -54,7 +53,7 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 
 ```bash
 docker-compose build
-docker-compose up
+docker-compose up```
 🌐 Access the apps:
 
 Web UI: https://localhost:7240
@@ -112,7 +111,7 @@ To generate and apply EF Core migrations:
 ```bash
 cd ECommerceApp.Api
 dotnet ef migrations add InitialCreate
-dotnet ef database update
+dotnet ef database update```
 
 ---
 
