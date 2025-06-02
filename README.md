@@ -115,10 +115,10 @@ Press F5 to launch
 🔄 Migrations
 To generate and apply EF Core migrations:
 
-```bash
-cd ECommerceApp.Api
-dotnet ef migrations add InitialCreate
-dotnet ef database update
+  ```bash
+  cd ECommerceApp.Api
+  dotnet ef migrations add InitialCreate
+  dotnet ef database update
 
 
 
