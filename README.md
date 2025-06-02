@@ -83,7 +83,7 @@ Press F5 to launch
 
 ## 📡 API Endpoints
 
-
+<div align="center">
 ### 🧾 Products
 
 | Method | Endpoint                    | Description          |
@@ -93,8 +93,9 @@ Press F5 to launch
 | POST   | `/api/products`             | Create a product     |
 | PUT    | `/api/products/{id}`        | Update a product     |
 | DELETE | `/api/products/{id}`        | Delete a product     |
+</div>
 
-
+<div align="center">
 ### 🛍️ Cart
 
 | Method | Endpoint                                  | Description          |
@@ -104,7 +105,7 @@ Press F5 to launch
 | PUT    | `/api/cart/{userId}/items/{itemId}`       | Update item quantity |
 | DELETE | `/api/cart/{userId}/items/{itemId}`       | Remove an item       |
 | DELETE | `/api/cart/{userId}`                      | Clear the cart       |
-
+</div>
 
 ---
 
