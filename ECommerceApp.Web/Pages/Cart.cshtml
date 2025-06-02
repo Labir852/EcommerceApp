@@ -1,0 +1,111 @@
+@page
+@model CartModel
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+
+    @if (!Model.Cart?.Items?.Any() ?? true)
+    {
+        <div class="text-center py-12">
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Your cart is empty</h3>
+            <p class="mt-1 text-sm text-gray-500">Start adding some products to your cart.</p>
+            <div class="mt-6">
+                <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flow-root">
+                    <ul role="list" class="-my-6 divide-y divide-gray-200">
+                        @foreach (var item in Model.Cart.Items)
+                        {
+                            <li class="py-6 flex">
+                                <div class="flex-1 flex">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between text-base font-medium text-gray-900">
+                                            <h3>@item.ProductName</h3>
+                                            <div class="text-right">
+                                                @if (item.DiscountedUnitPrice.HasValue)
+                                                {
+                                                    <p class="line-through text-sm text-gray-500">
+                                                        $@item.TotalPrice.ToString("F2")
+                                                    </p>
+                                                    <p class="text-sm font-medium text-red-600">
+                                                        $@item.DiscountedTotalPrice?.ToString("F2")
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-sm">$@item.TotalPrice.ToString("F2")</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 flex items-center justify-between">
+                                            <form method="post" asp-page-handler="UpdateQuantity" class="flex items-center">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <input type="number" name="quantity" value="@item.Quantity" min="1"
+                                                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                                                <button type="submit"
+                                                        class="ml-2 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                                    Update
+                                                </button>
+                                            </form>
+                                            <form method="post" asp-page-handler="RemoveItem">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <button type="submit"
+                                                        class="font-medium text-red-600 hover:text-red-500">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="mt-6 border-t border-gray-200 pt-6">
+                    <div class="flex justify-between text-base font-medium text-gray-900">
+                        <p>Subtotal</p>
+                        <div class="text-right">
+                            @if (Model.Cart.DiscountedTotalPrice < Model.Cart.TotalPrice)
+                            {
+                                <p class="line-through text-sm text-gray-500">
+                                    $@Model.Cart.TotalPrice.ToString("F2")
+                                </p>
+                                <p class="text-sm font-medium text-red-600">
+                                    $@Model.Cart.DiscountedTotalPrice?.ToString("F2")
+                                </p>
+                            }
+                            else
+                            {
+                                <p>$@Model.Cart.TotalPrice.ToString("F2")</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <form method="post" asp-page-handler="ClearCart" class="flex justify-between">
+                            <button type="submit"
+                                    class="text-sm font-medium text-red-600 hover:text-red-500">
+                                Clear Cart
+                            </button>
+                            <a href="#"
+                               class="flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                                Checkout
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div> 
