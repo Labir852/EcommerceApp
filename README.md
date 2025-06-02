@@ -65,7 +65,7 @@ Swagger UI: https://localhost:7241/swagger
 
 ---
 
-💻 Running Locally (Visual Studio)
+## 💻 Running Locally (Visual Studio)
 Clone the repository
 
 Open the solution (.sln) in Visual Studio 2022
@@ -78,7 +78,7 @@ Press F5 to launch
 
 ---
 
-📡 API Endpoints
+## 📡 API Endpoints
 
 
 ### 🧾 Products
@@ -105,7 +105,7 @@ Press F5 to launch
 
 ---
 
-🔧 Development Guide
+## 🔧 Development Guide
 🔄 Migrations
 To generate and apply EF Core migrations:
 
@@ -116,7 +116,7 @@ dotnet ef database update
 
 ---
 
-➕ Adding Features
+## ➕ Adding Features
 Define models & DTOs
 
 Update or create API endpoints / Razor Pages
@@ -129,7 +129,7 @@ Update the README!
 
 ---
 
-🤝 Contributing
+## 🤝 Contributing
 We welcome contributions! Here's how to get started:
 
 Fork the repository
@@ -142,12 +142,12 @@ Push and submit a pull request
 
 ---
 
-📄 License
+## 📄 License
 This project is licensed under the MIT License — see the LICENSE file for details.
 
 ---
 
-💬 Let's Connect
+## 💬 Let's Connect
 Have questions, ideas, or feedback? Feel free to open an Issue or start a discussion.
 
 Made with ❤️ using .NET 8, Razor Pages & Docker
