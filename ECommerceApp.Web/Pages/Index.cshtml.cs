@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly IHttpClientFactory _clientFactory;
 
-    public ProductSearchResultDto? Products { get; set; }
+    public List<Product> Products { get; set; } = new();
     public string? SearchTerm { get; set; }
     public string? SortBy { get; set; }
     public bool SortDescending { get; set; }
@@ -23,42 +23,47 @@ public class IndexModel : PageModel
         _clientFactory = clientFactory;
     }
 
-    public async Task OnGetAsync(string? searchTerm = null, string? sortBy = null, bool sortDescending = false, int page = 1)
+    public async Task OnGetAsync()
     {
-        SearchTerm = searchTerm;
-        SortBy = sortBy;
-        SortDescending = sortDescending;
-        CurrentPage = page;
-
-        var client = _clientFactory.CreateClient("API");
-        var response = await client.GetAsync($"api/products?searchTerm={searchTerm}&sortBy={sortBy}&sortDescending={sortDescending}&page={page}&pageSize={PageSize}");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var content = await response.Content.ReadAsStringAsync();
-            Products = JsonSerializer.Deserialize<ProductSearchResultDto>(content, new JsonSerializerOptions
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.GetAsync("/api/products");
+            
+            if (response.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            });
+                var content = await response.Content.ReadAsStringAsync();
+                Products = JsonSerializer.Deserialize<List<Product>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<Product>();
+            }
+            else
+            {
+                _logger.LogError("Failed to fetch products. Status code: {StatusCode}", response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching products");
         }
     }
 
     public async Task<IActionResult> OnPostAddToCartAsync(int productId)
     {
-        var client = _clientFactory.CreateClient("API");
-        var userId = "demo-user"; // In a real app, get this from authentication
-
-        var response = await client.PostAsJsonAsync(
-            $"api/cart/{userId}/items",
-            new { ProductId = productId, Quantity = 1 });
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            TempData["SuccessMessage"] = "Item added to cart successfully.";
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.PostAsync($"/api/cart/items?productId={productId}&quantity=1", null);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to add item to cart. Status code: {StatusCode}", response.StatusCode);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            TempData["ErrorMessage"] = "Failed to add item to cart.";
+            _logger.LogError(ex, "Error adding item to cart");
         }
 
         return RedirectToPage();

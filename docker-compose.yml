@@ -5,7 +5,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong!Passw0rd
+      - SA_PASSWORD=Asdf1234
       - MSSQL_PID=Express
     ports:
       - "1433:1433"
@@ -18,13 +18,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: api
+      target: api-dev
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=sql;Database=ECommerceApp;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=172.10.254.7,1433;Database=ECommerceApp;User Id=sa;Password=Asdf1234;TrustServerCertificate=True
+    volumes:
+      - .:/src
+      - /src/ECommerceApp.Api/bin/
+      - /src/ECommerceApp.Api/obj/
     ports:
-      - "5241:80"
+      - "7241:80"
     depends_on:
       - sql
     networks:
@@ -34,13 +38,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: web
+      target: web-dev
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ApiBaseUrl=http://api
+      - ApiBaseUrl=http://localhost:7241
+    volumes:
+      - .:/src
+      - /src/ECommerceApp.Web/bin/
+      - /src/ECommerceApp.Web/obj/
     ports:
-      - "5240:80"
+      - "7240:80"
     depends_on:
       - api
     networks:

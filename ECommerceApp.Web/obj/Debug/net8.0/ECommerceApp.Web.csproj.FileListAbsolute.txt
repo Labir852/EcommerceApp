@@ -370,3 +370,4 @@ D:\Miscellaneous\EcommerceApp\ECommerceApp.Web\bin\Debug\net8.0\ECommerceApp.Sha
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Web\bin\Debug\net8.0\ECommerceApp.Shared\obj\project.assets.json
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Web\bin\Debug\net8.0\ECommerceApp.Shared.dll
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Web\bin\Debug\net8.0\ECommerceApp.Shared.pdb
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Web\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

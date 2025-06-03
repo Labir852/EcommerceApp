@@ -1,112 +1,83 @@
 @page
-@using ECommerceApp.Shared.Models
 @model CartModel
 @{
     ViewData["Title"] = "Shopping Cart";
 }
 
-<div class="space-y-6">
-    <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+<div class="bg-white">
+    <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+        <form method="post" class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+            <section aria-labelledby="cart-heading" class="lg:col-span-7">
+                <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
 
-    @if (!Model.Cart?.Items?.Any() ?? true)
-    {
-        <div class="text-center py-12">
-            <h3 class="mt-2 text-sm font-medium text-gray-900">Your cart is empty</h3>
-            <p class="mt-1 text-sm text-gray-500">Start adding some products to your cart.</p>
-            <div class="mt-6">
-                <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Browse Products
-                </a>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="bg-white shadow sm:rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-                <div class="flow-root">
-                    <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        @foreach (var item in Model.Cart.Items)
-                        {
-                            <li class="py-6 flex">
-                                <div class="flex-1 flex">
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-base font-medium text-gray-900">
-                                            <h3>@item.ProductName</h3>
-                                            <div class="text-right">
-                                                @if (item.DiscountedUnitPrice.HasValue)
-                                                {
-                                                    <p class="line-through text-sm text-gray-500">
-                                                        $@item.TotalPrice.ToString("F2")
-                                                    </p>
-                                                    <p class="text-sm font-medium text-red-600">
-                                                        $@item.DiscountedTotalPrice?.ToString("F2")
-                                                    </p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-sm">$@item.TotalPrice.ToString("F2")</p>
-                                                }
-                                            </div>
+                <ul role="list" class="divide-y divide-gray-200 border-b border-t border-gray-200">
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <li class="flex py-6 sm:py-10">
+                            <div class="flex-shrink-0">
+                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name"
+                                     class="h-24 w-24 rounded-md object-cover object-center sm:h-32 sm:w-32">
+                            </div>
+
+                            <div class="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                                <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                                    <div>
+                                        <div class="flex justify-between">
+                                            <h3 class="text-sm">
+                                                <a href="#" class="font-medium text-gray-700 hover:text-gray-800">@item.Product.Name</a>
+                                            </h3>
                                         </div>
-                                        <div class="mt-4 flex items-center justify-between">
-                                            <form method="post" asp-page-handler="UpdateQuantity" class="flex items-center">
-                                                <input type="hidden" name="itemId" value="@item.Id" />
-                                                <input type="number" name="quantity" value="@item.Quantity" min="1"
-                                                       class="w-16 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                                <button type="submit"
-                                                        class="ml-2 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                                    Update
-                                                </button>
-                                            </form>
-                                            <form method="post" asp-page-handler="RemoveItem">
-                                                <input type="hidden" name="itemId" value="@item.Id" />
-                                                <button type="submit"
-                                                        class="font-medium text-red-600 hover:text-red-500">
-                                                    Remove
-                                                </button>
-                                            </form>
+                                        <p class="mt-1 text-sm text-gray-500">@item.Product.Description</p>
+                                    </div>
+
+                                    <div class="mt-4 sm:mt-0 sm:pr-9">
+                                        <div class="absolute right-0 top-0">
+                                            <button type="submit" asp-page-handler="RemoveFromCart" asp-route-productId="@item.Product.Id"
+                                                    class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                                                <span class="sr-only">Remove</span>
+                                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
 
-                <div class="mt-6 border-t border-gray-200 pt-6">
-                    <div class="flex justify-between text-base font-medium text-gray-900">
-                        <p>Subtotal</p>
-                        <div class="text-right">
-                            @if (Model.Cart?.DiscountedTotalPrice < Model.Cart?.TotalPrice)
-                            {
-                                <p class="line-through text-sm text-gray-500">
-                                    $@Model.Cart?.TotalPrice.ToString("F2")
+                                <p class="mt-4 flex space-x-2 text-sm text-gray-700">
+                                    <span>$@item.Product.Price.ToString("F2")</span>
+                                    <span class="text-gray-500">x</span>
+                                    <span>@item.Quantity</span>
                                 </p>
-                                <p class="text-sm font-medium text-red-600">
-                                    $@Model.Cart?.DiscountedTotalPrice?.ToString("F2")
-                                </p>
-                            }
-                            else
-                            {
-                                <p>$@Model.Cart?.TotalPrice.ToString("F2")</p>
-                            }
-                        </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </section>
+
+            <!-- Order summary -->
+            <section aria-labelledby="summary-heading"
+                     class="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+                <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Order summary</h2>
+
+                <dl class="mt-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <dt class="text-sm text-gray-600">Subtotal</dt>
+                        <dd class="text-sm font-medium text-gray-900">$@Model.SubTotal.ToString("F2")</dd>
                     </div>
-                    <div class="mt-6">
-                        <form method="post" asp-page-handler="ClearCart" class="flex justify-between">
-                            <button type="submit"
-                                    class="text-sm font-medium text-red-600 hover:text-red-500">
-                                Clear Cart
-                            </button>
-                            <a href="#"
-                               class="flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                                Checkout
-                            </a>
-                        </form>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                        <dt class="text-base font-medium text-gray-900">Order total</dt>
+                        <dd class="text-base font-medium text-gray-900">$@Model.Total.ToString("F2")</dd>
                     </div>
+                </dl>
+
+                <div class="mt-6">
+                    <button type="submit" asp-page-handler="Checkout"
+                            class="w-full rounded-md border border-transparent bg-primary px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-50">
+                        Checkout
+                    </button>
                 </div>
-            </div>
-        </div>
-    }
+            </section>
+        </form>
+    </div>
 </div> 

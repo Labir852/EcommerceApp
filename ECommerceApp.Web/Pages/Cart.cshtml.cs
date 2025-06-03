@@ -2,93 +2,89 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using ECommerceApp.Shared.Models;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ECommerceApp.Web.Pages;
 
 public class CartModel : PageModel
 {
     private readonly IHttpClientFactory _clientFactory;
-    private readonly IConfiguration _configuration;
+    private readonly ILogger<CartModel> _logger;
 
-    public CartDto? Cart { get; set; }
+    public List<CartItem> CartItems { get; set; } = new();
+    public decimal SubTotal => CartItems.Sum(item => item.Product.Price * item.Quantity);
+    public decimal Total => SubTotal; // Add tax, shipping, etc. if needed
 
-    public CartModel(IHttpClientFactory clientFactory, IConfiguration configuration)
+    public CartModel(IHttpClientFactory clientFactory, ILogger<CartModel> logger)
     {
         _clientFactory = clientFactory;
-        _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task OnGetAsync()
     {
-        var client = _clientFactory.CreateClient("API");
-        var userId = "demo-user"; // In a real app, get this from authentication
-
-        var response = await client.GetAsync($"api/cart/{userId}");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var content = await response.Content.ReadAsStringAsync();
-            Cart = JsonSerializer.Deserialize<CartDto>(content, new JsonSerializerOptions
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.GetAsync("/api/cart");
+            
+            if (response.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            });
+                var content = await response.Content.ReadAsStringAsync();
+                CartItems = JsonSerializer.Deserialize<List<CartItem>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<CartItem>();
+            }
+            else
+            {
+                _logger.LogError("Failed to fetch cart items. Status code: {StatusCode}", response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching cart items");
         }
     }
 
-    public async Task<IActionResult> OnPostUpdateQuantityAsync(int itemId, int quantity)
+    public async Task<IActionResult> OnPostRemoveFromCartAsync(int productId)
     {
-        var client = _clientFactory.CreateClient("API");
-        var userId = "demo-user"; // In a real app, get this from authentication
-
-        var response = await client.PutAsJsonAsync(
-            $"api/cart/{userId}/items/{itemId}",
-            new UpdateCartItemDto { Quantity = quantity });
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            TempData["SuccessMessage"] = "Cart updated successfully.";
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.DeleteAsync($"/api/cart/items/{productId}");
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to remove item from cart. Status code: {StatusCode}", response.StatusCode);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            TempData["ErrorMessage"] = "Failed to update cart.";
+            _logger.LogError(ex, "Error removing item from cart");
         }
 
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostRemoveItemAsync(int itemId)
+    public async Task<IActionResult> OnPostCheckoutAsync()
     {
-        var client = _clientFactory.CreateClient("API");
-        var userId = "demo-user"; // In a real app, get this from authentication
-
-        var response = await client.DeleteAsync($"api/cart/{userId}/items/{itemId}");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            TempData["SuccessMessage"] = "Item removed from cart successfully.";
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.PostAsync("/api/orders", null);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToPage("/OrderConfirmation");
+            }
+            
+            _logger.LogError("Failed to create order. Status code: {StatusCode}", response.StatusCode);
         }
-        else
+        catch (Exception ex)
         {
-            TempData["ErrorMessage"] = "Failed to remove item from cart.";
-        }
-
-        return RedirectToPage();
-    }
-
-    public async Task<IActionResult> OnPostClearCartAsync()
-    {
-        var client = _clientFactory.CreateClient("API");
-        var userId = "demo-user"; // In a real app, get this from authentication
-
-        var response = await client.DeleteAsync($"api/cart/{userId}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            TempData["SuccessMessage"] = "Cart cleared successfully.";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Failed to clear cart.";
+            _logger.LogError(ex, "Error creating order");
         }
 
         return RedirectToPage();

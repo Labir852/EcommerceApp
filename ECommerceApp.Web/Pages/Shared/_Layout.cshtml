@@ -1,36 +1,220 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ECommerce App</title>
+    <title>@ViewData["Title"] - E-Bazaar</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#F5F5F5',
+                        accent: '#FF4D4D'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-50">
-    <header class="bg-white shadow-sm">
-        <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-            <div class="flex h-16 items-center justify-between">
-                <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold text-indigo-600">ECommerce</a>
-                </div>
-                <div class="ml-10 space-x-4">
-                    <a href="/" class="text-base font-medium text-gray-500 hover:text-gray-900">Products</a>
-                    <a href="/Cart" class="text-base font-medium text-gray-500 hover:text-gray-900">Cart</a>
+<body class="h-full">
+    <div class="min-h-full">
+        <nav class="bg-white shadow-sm">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between items-center">
+                    <div class="flex items-center">
+                        <a href="/" class="flex flex-shrink-0 items-center">
+                            <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                            </svg>
+                            <span class="text-2xl font-bold text-primary ml-2">E-Bazaar</span>
+                        </a>
+                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                            <a href="/" class="inline-flex items-center border-b-2 border-primary px-1 pt-1 text-sm font-medium text-gray-900">Home</a>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="cartButton" type="button" class="relative inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-primary hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            <svg class="-ml-0.5 mr-2 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Cart
+                            <span id="cartBadge" class="hidden absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">0</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
-    </header>
 
-    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        @RenderBody()
-    </main>
+        <main>
+            <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
 
-    <footer class="bg-white mt-auto">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
-            <p class="text-center text-sm text-gray-500">&copy; 2024 ECommerce App. All rights reserved.</p>
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="fixed inset-0 overflow-hidden z-50 hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" id="cartOverlay"></div>
+            <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
+                <div class="w-screen max-w-md transform transition ease-in-out duration-300 translate-x-0">
+                    <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+                        <div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
+                            <div class="flex items-start justify-between">
+                                <h2 class="text-lg font-medium text-gray-900">Shopping Cart</h2>
+                                <div class="ml-3 h-7 flex items-center">
+                                    <button id="closeCartButton" type="button" class="-m-2 p-2 text-gray-400 hover:text-gray-500">
+                                        <span class="sr-only">Close panel</span>
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-8" id="cartItemsList">
+                                <!-- Cart items will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                                <p>Subtotal</p>
+                                <p id="cartSubtotal">$0.00</p>
+                            </div>
+                            <div class="mt-6">
+                                <a href="/Cart" class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary hover:bg-blue-700">
+                                    Checkout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
 
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @section Scripts {
+        <script>
+            // Cart sidebar functionality
+            const cartButton = document.getElementById('cartButton');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            const closeCartButton = document.getElementById('closeCartButton');
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+
+            cartButton.addEventListener('click', () => {
+                cartSidebar.classList.remove('hidden');
+                fetchCart();
+            });
+
+            closeCartButton.addEventListener('click', () => {
+                cartSidebar.classList.add('hidden');
+            });
+
+            cartOverlay.addEventListener('click', () => {
+                cartSidebar.classList.add('hidden');
+            });
+
+            async function fetchCart() {
+                try {
+                    const response = await fetch(`${apiBaseUrl}/api/cart`);
+                    if (response.ok) {
+                        const cart = await response.json();
+                        updateCartDisplay(cart);
+                    }
+                } catch (error) {
+                    console.error('Error fetching cart:', error);
+                    showNotification('Failed to load cart.', 'error');
+                }
+            }
+
+            function updateCartDisplay(cart) {
+                cartItemsList.innerHTML = cart.items.map(item => `
+                    <div class="flex py-6 border-b border-gray-200">
+                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                            <img src="${item.product.imageUrl}" alt="${item.product.name}" class="h-full w-full object-cover object-center">
+                        </div>
+                        <div class="ml-4 flex flex-1 flex-col">
+                            <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3>${item.product.name}</h3>
+                                    <p class="ml-4">$${(item.product.discountedPrice || item.product.price).toFixed(2)}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-1 items-end justify-between text-sm">
+                                <div class="flex items-center">
+                                    <button onclick="updateQuantity(${item.productId}, ${item.quantity - 1})" class="px-2 py-1 text-gray-600 hover:text-gray-800">-</button>
+                                    <span class="mx-2">Qty ${item.quantity}</span>
+                                    <button onclick="updateQuantity(${item.productId}, ${item.quantity + 1})" class="px-2 py-1 text-gray-600 hover:text-gray-800">+</button>
+                                </div>
+                                <button onclick="removeFromCart(${item.productId})" class="font-medium text-primary hover:text-blue-700">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const subtotal = cart.items.reduce((total, item) => 
+                    total + (item.quantity * (item.product.discountedPrice || item.product.price)), 0);
+                cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            }
+
+            async function updateQuantity(productId, newQuantity) {
+                if (newQuantity < 1) {
+                    await removeFromCart(productId);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${apiBaseUrl}/api/cart/items`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            productId,
+                            quantity: newQuantity
+                        })
+                    });
+
+                    if (response.ok) {
+                        await fetchCart();
+                        await fetchCartCount();
+                    } else {
+                        showNotification('Failed to update quantity.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating quantity:', error);
+                    showNotification('An error occurred while updating quantity.', 'error');
+                }
+            }
+
+            async function removeFromCart(productId) {
+                try {
+                    const response = await fetch(`${apiBaseUrl}/api/cart/items/${productId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        await fetchCart();
+                        await fetchCartCount();
+                        showNotification('Item removed from cart.', 'success');
+                    } else {
+                        showNotification('Failed to remove item from cart.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error removing item from cart:', error);
+                    showNotification('An error occurred while removing item.', 'error');
+                }
+            }
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
