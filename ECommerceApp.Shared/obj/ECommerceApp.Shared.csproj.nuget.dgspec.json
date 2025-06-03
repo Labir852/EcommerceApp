@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {}
+    "/src/ECommerceApp.Shared/ECommerceApp.Shared.csproj": {}
   },
   "projects": {
-    "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
+    "/src/ECommerceApp.Shared/ECommerceApp.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
+        "projectUniqueName": "/src/ECommerceApp.Shared/ECommerceApp.Shared.csproj",
         "projectName": "ECommerceApp.Shared",
-        "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
-        "packagesPath": "C:\\Users\\Tanvir Anjum Labir\\.nuget\\packages\\",
-        "outputPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\obj\\",
+        "projectPath": "/src/ECommerceApp.Shared/ECommerceApp.Shared.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/src/ECommerceApp.Shared/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "D:\\Miscellaneous\\NuGet.Config",
-          "C:\\Users\\Tanvir Anjum Labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -66,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MdIXbqh30CA=",
+  "dgSpecHash": "gG5ymhZGI+0=",
   "success": true,
-  "projectFilePath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
+  "projectFilePath": "/src/ECommerceApp.Shared/ECommerceApp.Shared.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

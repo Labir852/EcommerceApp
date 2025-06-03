@@ -22,7 +22,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=172.10.254.7,1433;Database=ECommerceApp;User Id=sa;Password=Asdf1234;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=172.10.254.45,1433;Database=ECommerceApp;User Id=sa;Password=Asdf1234;TrustServerCertificate=True
     volumes:
       - .:/src
       - /src/ECommerceApp.Api/bin/

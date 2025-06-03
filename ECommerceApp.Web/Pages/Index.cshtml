@@ -289,6 +289,8 @@
 
         async function fetchProducts(searchTerm = '') {
             console.log('Fetching products...');
+            console.log('API URL:', `${apiBaseUrl}/api/products?searchTerm=${encodeURIComponent(searchTerm)}&page=1&pageSize=12`);
+            
             const grid = document.getElementById('productsGrid');
             
             if (!grid) {
@@ -299,8 +301,11 @@
             grid.innerHTML = '<div class="text-center text-gray-500 col-span-full">Loading products...</div>';
 
             try {
+                console.log('Making API request to:', apiBaseUrl);
                 const response = await fetch(`${apiBaseUrl}/api/products?searchTerm=${encodeURIComponent(searchTerm)}&page=1&pageSize=12`);
-                console.log('Products API response status:', response.status);
+                console.log('API Response:', response);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
                 
                 if (response.ok) {
                     const data = await response.json();
@@ -322,12 +327,22 @@
                         grid.innerHTML = '<div class="text-center text-red-500 col-span-full">Invalid data format received</div>';
                     }
                 } else {
+                    const errorText = await response.text();
                     console.error('Failed to fetch products:', response.status, response.statusText);
-                    grid.innerHTML = '<div class="text-center text-red-500 col-span-full">Failed to load products</div>';
+                    console.error('Error response:', errorText);
+                    grid.innerHTML = `<div class="text-center text-red-500 col-span-full">
+                        Failed to load products (Status: ${response.status})
+                        <br>
+                        <span class="text-sm">${response.statusText}</span>
+                    </div>`;
                 }
             } catch (error) {
                 console.error('Error fetching products:', error);
-                grid.innerHTML = '<div class="text-center text-red-500 col-span-full">Error loading products</div>';
+                grid.innerHTML = `<div class="text-center text-red-500 col-span-full">
+                    Error loading products
+                    <br>
+                    <span class="text-sm">${error.message}</span>
+                </div>`;
             }
         }
 
