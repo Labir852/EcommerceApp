@@ -48,8 +48,9 @@ A **modern full-stack e-commerce application** built with **.NET 8.0**, featurin
 ## 🐳 Running with Docker
 
 1. Clone the repository  
-2. Open a terminal in the root directory  
-3. Run the app:
+2. Open a terminal in the root directory
+3. Change the Database Connection in [appsettings.json](./ECommerceApp.Api/appsettings.json) and [docker-compose.yml](./docker-compose.yml) as your database strings.
+4. Run the app:
    ```bash
    docker-compose build
    docker-compose up
