@@ -117,6 +117,7 @@ Press F5 to launch
    
    ```bash
    cd ECommerceApp.Api
+   dotnet tool install --global dotnet-ef
    dotnet ef migrations add InitialCreate
    dotnet ef database update    
 ---
