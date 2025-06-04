@@ -22,3 +22,15 @@ D:/Miscellaneous/EcommerceApp/ECommerceApp.Shared/obj/Debug/net8.0/ref/ECommerce
 /src/ECommerceApp.Shared/obj/Debug/net8.0/refint/ECommerceApp.Shared.dll
 /src/ECommerceApp.Shared/obj/Debug/net8.0/ECommerceApp.Shared.pdb
 /src/ECommerceApp.Shared/obj/Debug/net8.0/ref/ECommerceApp.Shared.dll
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\bin\Debug\net8.0\ECommerceApp.Shared.deps.json
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\bin\Debug\net8.0\ECommerceApp.Shared.dll
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\bin\Debug\net8.0\ECommerceApp.Shared.pdb
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.AssemblyInfoInputs.cache
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.AssemblyInfo.cs
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.csproj.CoreCompileInputs.cache
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.sourcelink.json
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.dll
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\refint\ECommerceApp.Shared.dll
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ECommerceApp.Shared.pdb
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Shared\obj\Debug\net8.0\ref\ECommerceApp.Shared.dll

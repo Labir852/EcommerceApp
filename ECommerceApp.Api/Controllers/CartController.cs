@@ -36,43 +36,23 @@ public class CartController : ControllerBase
         {
             Id = cart.Id,
             UserId = cart.UserId,
-            Items = new List<CartItemDto>(),
-            TotalPrice = 0,
-            DiscountedTotalPrice = 0
-        };
-
-        var currentDate = DateTime.UtcNow.Date;
-        foreach (var item in cart.Items)
-        {
-            var itemDto = new CartItemDto
+            Items = cart.Items.Select(item => new CartItemDto
             {
                 Id = item.Id,
                 ProductId = item.ProductId,
                 ProductName = item.Product.Name,
                 Quantity = item.Quantity,
-                UnitPrice = item.Product.Price,
-                TotalPrice = item.Product.Price * item.Quantity
-            };
+                UnitPrice = item.UnitPrice,
+                TotalPrice = item.UnitPrice * item.Quantity,
+                DiscountedUnitPrice = item.DiscountedUnitPrice,
+                DiscountedTotalPrice = item.DiscountedUnitPrice.HasValue ? 
+                    item.DiscountedUnitPrice.Value * item.Quantity : null
+            }).ToList()
+        };
 
-            if (item.Product.DiscountStartDate <= currentDate && 
-                item.Product.DiscountEndDate >= currentDate)
-            {
-                itemDto.DiscountedUnitPrice = item.Product.Price * 
-                    (1 - item.Product.DiscountPercentage / 100);
-                itemDto.DiscountedTotalPrice = itemDto.DiscountedUnitPrice * item.Quantity;
-            }
-
-            cartDto.Items.Add(itemDto);
-            cartDto.TotalPrice += itemDto.TotalPrice;
-            if (itemDto.DiscountedTotalPrice.HasValue)
-            {
-                cartDto.DiscountedTotalPrice += itemDto.DiscountedTotalPrice.Value;
-            }
-            else
-            {
-                cartDto.DiscountedTotalPrice += itemDto.TotalPrice;
-            }
-        }
+        cartDto.TotalPrice = cartDto.Items.Sum(i => i.TotalPrice);
+        cartDto.DiscountedTotalPrice = cartDto.Items
+            .Sum(i => i.DiscountedTotalPrice ?? i.TotalPrice);
 
         return cartDto;
     }
@@ -88,17 +68,13 @@ public class CartController : ControllerBase
         {
             cart = new Cart { UserId = userId };
             _context.Carts.Add(cart);
+            await _context.SaveChangesAsync();
         }
 
         var product = await _context.Products.FindAsync(addToCartDto.ProductId);
         if (product == null)
         {
             return NotFound("Product not found");
-        }
-
-        if (product.StockQuantity < addToCartDto.Quantity)
-        {
-            return BadRequest("Not enough stock available");
         }
 
         var existingItem = cart.Items
@@ -111,29 +87,26 @@ public class CartController : ControllerBase
         }
         else
         {
-            cart.Items.Add(new CartItem
+            var newItem = new CartItem
             {
+                CartId = cart.Id,
                 ProductId = addToCartDto.ProductId,
                 Quantity = addToCartDto.Quantity,
-                UnitPrice = product.Price
-            });
+                UnitPrice = product.Price,
+                DiscountedUnitPrice = product.DiscountedPrice
+            };
+            _context.CartItems.Add(newItem);
         }
 
-        product.StockQuantity -= addToCartDto.Quantity;
         await _context.SaveChangesAsync();
-
         return await GetCart(userId);
     }
 
-    [HttpPut("{userId}/items/{itemId}")]
-    public async Task<ActionResult<CartDto>> UpdateCartItem(
-        string userId, 
-        int itemId, 
-        UpdateCartItemDto updateCartItemDto)
+    [HttpPut("{userId}/items/{productId}")]
+    public async Task<ActionResult<CartDto>> UpdateCartItem(string userId, int productId, UpdateCartItemDto updateCartItemDto)
     {
         var cart = await _context.Carts
             .Include(c => c.Items)
-            .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
 
         if (cart == null)
@@ -141,35 +114,24 @@ public class CartController : ControllerBase
             return NotFound("Cart not found");
         }
 
-        var cartItem = cart.Items.FirstOrDefault(i => i.Id == itemId);
+        var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
         if (cartItem == null)
         {
             return NotFound("Cart item not found");
         }
 
-        var product = cartItem.Product;
-        var quantityDifference = updateCartItemDto.Quantity - cartItem.Quantity;
-
-        if (quantityDifference > 0 && product.StockQuantity < quantityDifference)
-        {
-            return BadRequest("Not enough stock available");
-        }
-
-        product.StockQuantity -= quantityDifference;
         cartItem.Quantity = updateCartItemDto.Quantity;
         cartItem.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-
         return await GetCart(userId);
     }
 
-    [HttpDelete("{userId}/items/{itemId}")]
-    public async Task<ActionResult<CartDto>> RemoveFromCart(string userId, int itemId)
+    [HttpDelete("{userId}/items/{productId}")]
+    public async Task<ActionResult<CartDto>> RemoveFromCart(string userId, int productId)
     {
         var cart = await _context.Carts
             .Include(c => c.Items)
-            .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
 
         if (cart == null)
@@ -177,13 +139,12 @@ public class CartController : ControllerBase
             return NotFound("Cart not found");
         }
 
-        var cartItem = cart.Items.FirstOrDefault(i => i.Id == itemId);
+        var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
         if (cartItem == null)
         {
             return NotFound("Cart item not found");
         }
 
-        cartItem.Product.StockQuantity += cartItem.Quantity;
         _context.CartItems.Remove(cartItem);
         await _context.SaveChangesAsync();
 

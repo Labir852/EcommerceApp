@@ -6,7 +6,11 @@ builder.Services.AddRazorPages();
 // Add HttpClient factory
 builder.Services.AddHttpClient("API", client =>
 {
-    var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:7241";
+    var apiBaseUrl = builder.Configuration["ApiBaseUrl"];
+    if (string.IsNullOrEmpty(apiBaseUrl))
+    {
+        throw new InvalidOperationException("API Base URL is not configured");
+    }
     client.BaseAddress = new Uri(apiBaseUrl);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
@@ -36,6 +40,8 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 // Ensure we're listening on all interfaces
-app.Urls.Add("http://+:80");
+app.Urls.Clear();
+app.Urls.Add("http://localhost:7240");
+app.Urls.Add("http://+:7240"); // Keep the original port as fallback
 
 app.Run();

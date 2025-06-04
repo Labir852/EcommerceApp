@@ -5,6 +5,14 @@ using ECommerceApp.Shared.Models;
 
 namespace ECommerceApp.Web.Pages;
 
+public class ProductListResponse
+{
+    public List<Product> Items { get; set; } = new();
+    public int TotalItems { get; set; }
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+}
+
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
@@ -33,10 +41,22 @@ public class IndexModel : PageModel
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Products = JsonSerializer.Deserialize<List<Product>>(content, new JsonSerializerOptions
+                _logger.LogInformation("API Response: {Content}", content);
+                
+                var productList = JsonSerializer.Deserialize<ProductListResponse>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? new List<Product>();
+                });
+                
+                if (productList != null)
+                {
+                    Products = productList.Items;
+                    _logger.LogInformation("Deserialized {Count} products", Products.Count);
+                }
+                else
+                {
+                    _logger.LogWarning("Deserialized product list is null");
+                }
             }
             else
             {

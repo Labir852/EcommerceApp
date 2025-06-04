@@ -138,3 +138,4 @@ D:\Miscellaneous\EcommerceApp\ECommerceApp.Api\obj\Debug\net8.0\ECommerceApp.Api
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Api\obj\Debug\net8.0\ref\ECommerceApp.Api.dll
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Api\bin\Debug\net8.0\ECommerceApp.Shared.dll
 D:\Miscellaneous\EcommerceApp\ECommerceApp.Api\bin\Debug\net8.0\ECommerceApp.Shared.pdb
+D:\Miscellaneous\EcommerceApp\ECommerceApp.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

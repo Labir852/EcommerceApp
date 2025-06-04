@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ECommerceApp.Api.Data;
 using ECommerceApp.Api.Models;
 using ECommerceApp.Api.Models.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace ECommerceApp.Api.Controllers;
 
@@ -11,15 +12,19 @@ namespace ECommerceApp.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(ApplicationDbContext context)
+    public ProductsController(ApplicationDbContext context, ILogger<ProductsController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<ProductListDto>> GetProducts([FromQuery] ProductSearchDto searchDto)
     {
+        _logger.LogInformation("Getting products with search parameters: {@SearchDto}", searchDto);
+
         var query = _context.Products.AsQueryable();
 
         // Apply search filter
@@ -42,49 +47,64 @@ public class ProductsController : ControllerBase
             _ => query.OrderByDescending(p => p.CreatedAt)
         };
 
-        // Calculate pagination
-        var totalItems = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalItems / (double)searchDto.PageSize);
-        var items = await query
-            .Skip((searchDto.Page - 1) * searchDto.PageSize)
-            .Take(searchDto.PageSize)
-            .Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                DiscountedPrice = p.DiscountedPrice,
-                DiscountStartDate = p.DiscountStartDate,
-                DiscountEndDate = p.DiscountEndDate,
-                DiscountPercentage = p.DiscountPercentage,
-                StockQuantity = p.StockQuantity,
-                ImageUrl = p.ImageUrl
-            })
-            .ToListAsync();
-
-        // Update discounted prices based on current date
-        var currentDate = DateTime.UtcNow.Date;
-        foreach (var product in items)
+        try
         {
-            if (product.DiscountStartDate <= currentDate && 
-                product.DiscountEndDate >= currentDate)
+            // Calculate pagination
+            var totalItems = await query.CountAsync();
+            _logger.LogInformation("Total items found: {TotalItems}", totalItems);
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)searchDto.PageSize);
+            var items = await query
+                .Skip((searchDto.Page - 1) * searchDto.PageSize)
+                .Take(searchDto.PageSize)
+                .Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    DiscountedPrice = p.DiscountedPrice,
+                    DiscountStartDate = p.DiscountStartDate,
+                    DiscountEndDate = p.DiscountEndDate,
+                    DiscountPercentage = p.DiscountPercentage,
+                    StockQuantity = p.StockQuantity,
+                    ImageUrl = p.ImageUrl
+                })
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {ItemCount} items for page {Page}", items.Count, searchDto.Page);
+
+            // Update discounted prices based on current date
+            var currentDate = DateTime.UtcNow.Date;
+            foreach (var product in items)
             {
-                product.DiscountedPrice = product.Price * (1 - product.DiscountPercentage / 100);
+                if (product.DiscountStartDate <= currentDate && 
+                    product.DiscountEndDate >= currentDate)
+                {
+                    product.DiscountedPrice = product.Price * (1 - product.DiscountPercentage / 100);
+                }
+                else
+                {
+                    product.DiscountedPrice = null;
+                }
             }
-            else
+
+            var result = new ProductListDto
             {
-                product.DiscountedPrice = null;
-            }
+                Items = items,
+                TotalItems = totalItems,
+                CurrentPage = searchDto.Page,
+                TotalPages = totalPages
+            };
+
+            _logger.LogInformation("Returning product list with {@Result}", result);
+            return result;
         }
-
-        return new ProductListDto
+        catch (Exception ex)
         {
-            Items = items,
-            TotalItems = totalItems,
-            CurrentPage = searchDto.Page,
-            TotalPages = totalPages
-        };
+            _logger.LogError(ex, "Error retrieving products");
+            throw;
+        }
     }
 
     [HttpGet("{id}")]

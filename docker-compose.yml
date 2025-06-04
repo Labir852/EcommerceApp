@@ -1,19 +1,6 @@
 version: '3.8'
 
 services:
-  sql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Asdf1234
-      - MSSQL_PID=Express
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqldata:/var/opt/mssql
-    networks:
-      - ecommerce-network
-
   api:
     build:
       context: .
@@ -23,14 +10,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=172.10.254.45,1433;Database=ECommerceApp;User Id=sa;Password=Asdf1234;TrustServerCertificate=True
-    volumes:
-      - .:/src
-      - /src/ECommerceApp.Api/bin/
-      - /src/ECommerceApp.Api/obj/
     ports:
       - "7241:80"
-    depends_on:
-      - sql
     networks:
       - ecommerce-network
 
@@ -42,11 +23,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ApiBaseUrl=http://localhost:7241
-    volumes:
-      - .:/src
-      - /src/ECommerceApp.Web/bin/
-      - /src/ECommerceApp.Web/obj/
+      - ApiBaseUrl=http://api:80
     ports:
       - "7240:80"
     depends_on:

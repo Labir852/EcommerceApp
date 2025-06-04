@@ -15,7 +15,8 @@ public static class DbInitializer
             return; // DB has been seeded
         }
 
-        var products = new[]
+        // Add initial products
+        var initialProducts = new[]
         {
             new Product
             {
@@ -73,7 +74,14 @@ public static class DbInitializer
             }
         };
 
-        context.Products.AddRange(products);
+        // Add additional sample products
+        var sampleProducts = SampleProducts.GetSampleProducts();
+
+        // Combine both sets of products
+        var allProducts = initialProducts.Concat(sampleProducts);
+
+        // Add all products to the context
+        context.Products.AddRange(allProducts);
         context.SaveChanges();
     }
 } 

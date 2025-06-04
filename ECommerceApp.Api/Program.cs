@@ -17,7 +17,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebApp", policy =>
     {
-        policy.WithOrigins("http://localhost:7240")
+        policy.WithOrigins(
+                "http://localhost:7240",
+                "http://localhost:7241",
+                "http://localhost:80",
+                "http://web",
+                "http://web:80",
+                "http://localhost"
+            )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders("Content-Disposition");
@@ -80,5 +87,10 @@ else
 app.UseCors("AllowWebApp");
 app.UseAuthorization();
 app.MapControllers();
+
+// Ensure we're listening on all interfaces
+app.Urls.Clear();
+app.Urls.Add("http://localhost:7241");
+app.Urls.Add("http://+:7241"); // Keep the original port as fallback
 
 app.Run();
