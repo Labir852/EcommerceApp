@@ -1,16 +1,8 @@
-/.vs
-.vs
-/EcommerceApp.Api/bin
-/EcommerceApp.Api/obj
-/EcommerceApp.Shared/bin
-/EcommerceApp.Shared/obj
-/EcommerceApp.Web/bin
-/EcommerceApp.Web/obj
-
-EcommerceApp.Api/bin
-EcommerceApp.Api/obj
-EcommerceApp.Shared/bin
-EcommerceApp.Shared/obj
-EcommerceApp.Web/bin
-EcommerceApp.Web/obj
+\.vs
+\EcommerceApp.Api\bin
+\EcommerceApp.Api\obj
+\EcommerceApp.Shared\bin
+\EcommerceApp.Shared\obj
+\EcommerceApp.Web\bin
+\EcommerceApp.Web\obj
 
