@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj": {}
+    "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj": {}
   },
   "projects": {
-    "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
+    "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
         "projectName": "ECommerceApp.Shared",
-        "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
-        "packagesPath": "C:\\Users\\Tanvir Anjum Labir\\.nuget\\packages\\",
-        "outputPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\obj\\",
+        "projectPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj",
+        "packagesPath": "C:\\Users\\labir\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "D:\\Miscellaneous\\NuGet.Config",
-          "C:\\Users\\Tanvir Anjum Labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -70,21 +69,20 @@
         }
       }
     },
-    "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj": {
+    "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj",
+        "projectUniqueName": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj",
         "projectName": "ECommerceApp.Web",
-        "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj",
-        "packagesPath": "C:\\Users\\Tanvir Anjum Labir\\.nuget\\packages\\",
-        "outputPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Web\\obj\\",
+        "projectPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Web\\ECommerceApp.Web.csproj",
+        "packagesPath": "C:\\Users\\labir\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "D:\\Miscellaneous\\NuGet.Config",
-          "C:\\Users\\Tanvir Anjum Labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\labir\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -99,8 +97,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
-                "projectPath": "D:\\Miscellaneous\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj"
+              "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj": {
+                "projectPath": "C:\\Users\\labir\\EcommerceApp\\ECommerceApp.Shared\\ECommerceApp.Shared.csproj"
               }
             }
           }

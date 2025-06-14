@@ -81,9 +81,9 @@
         </div>
         
         <!-- Pagination controls -->
-        <div class="flex items-center justify-center mt-8">
+        <div id="paginationContainer" class="flex items-center justify-center mt-8">
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                <button id="prevPage" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <button id="prevPage" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
                     <span class="sr-only">Previous</span>
                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
@@ -92,7 +92,7 @@
                 <div id="paginationNumbers" class="flex">
                     <!-- Page numbers will be inserted here -->
                 </div>
-                <button id="nextPage" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <button id="nextPage" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
                     <span class="sr-only">Next</span>
                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
@@ -156,6 +156,18 @@
                                                 <span class="text-gray-500 sm:text-sm">%</span>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-6">
+                                    <div class="w-1/2">
+                                        <label for="discountStartDate" class="block text-sm font-medium text-gray-700 mb-2">Discount Start Date</label>
+                                        <input type="datetime-local" name="discountStartDate" id="discountStartDate"
+                                            class="block w-full px-4 py-3 rounded-md border-2 border-gray-200 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 transition duration-150 ease-in-out">
+                                    </div>
+                                    <div class="w-1/2">
+                                        <label for="discountEndDate" class="block text-sm font-medium text-gray-700 mb-2">Discount End Date</label>
+                                        <input type="datetime-local" name="discountEndDate" id="discountEndDate"
+                                            class="block w-full px-4 py-3 rounded-md border-2 border-gray-200 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 transition duration-150 ease-in-out">
                                     </div>
                                 </div>
                                 <div class="flex gap-6 mt-4">
@@ -355,20 +367,24 @@
             product.discountPercentage = parseFloat(product.discountPercentage) || 0;
             product.stockQuantity = parseInt(product.stockQuantity) || 0;
             
-            // Calculate and set discounted price
+            // Handle discount dates
+            if (product.discountPercentage > 0) {
+                if (!product.discountStartDate) {
+                    product.discountStartDate = new Date().toISOString();
+                }
+                if (!product.discountEndDate) {
+                    product.discountEndDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                }
+            } else {
+                product.discountStartDate = null;
+                product.discountEndDate = null;
+            }
+            
+            // Calculate discounted price
             if (product.discountPercentage > 0 && product.discountPercentage <= 100) {
                 product.discountedPrice = product.price - (product.price * (product.discountPercentage / 100));
             } else {
                 product.discountedPrice = null;
-            }
-            
-            // Set discount dates if there's a discount
-            if (product.discountPercentage > 0) {
-                product.discountStartDate = new Date().toISOString();
-                product.discountEndDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
-            } else {
-                product.discountStartDate = null;
-                product.discountEndDate = null;
             }
             
             try {
@@ -382,7 +398,7 @@
 
                 if (response.ok) {
                     closeAddProductModal();
-                    fetchProducts(); // Refresh the products list
+                    fetchProducts();
                     showNotification('Product added successfully!', 'success');
                 } else {
                     const errorData = await response.json();
@@ -407,6 +423,7 @@
             });
             
             const grid = document.getElementById('productsGrid');
+            
             if (!grid) {
                 console.error('Products grid element not found!');
                 return;
@@ -434,8 +451,8 @@
                 }
 
                 // Update pagination state
-                totalPages = data.totalPages || 1;
-                currentPage = data.currentPage || 1;
+                totalPages = Math.ceil(data.totalItems / 12); // Calculate total pages based on total items
+                currentPage = page;
                 
                 // Update products grid
                 updateProductsGrid(data.items || []);
@@ -555,68 +572,82 @@
             setTimeout(() => notification.remove(), 3000);
         }
 
-        function calculateDiscountedPrice() {
-            const price = parseFloat(document.getElementById('productPrice').value) || 0;
-            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
-            const discountedPriceInput = document.getElementById('discountedPrice');
-            
-            if (price <= 0 || discountPercentage < 0 || discountPercentage > 100) {
-                discountedPriceInput.value = price.toFixed(2);
-                return;
-            }
-            
-            const discountedPrice = price - (price * (discountPercentage / 100));
-            discountedPriceInput.value = discountedPrice.toFixed(2);
-            return discountedPrice.toFixed(2);
-        }
-
         function updatePagination() {
+            const paginationContainer = document.getElementById('paginationContainer');
             const paginationNumbers = document.getElementById('paginationNumbers');
             const prevButton = document.getElementById('prevPage');
             const nextButton = document.getElementById('nextPage');
             
-            if (!paginationNumbers || !prevButton || !nextButton) return;
+            if (!paginationContainer || !paginationNumbers || !prevButton || !nextButton) return;
             
+            console.log('Updating pagination. Total pages:', totalPages, 'Current page:', currentPage);
+            
+            // Hide pagination if only one page
+            if (totalPages <= 1) {
+                paginationContainer.classList.add('hidden');
+                return;
+            } else {
+                paginationContainer.classList.remove('hidden');
+            }
+
             // Update prev/next buttons
             prevButton.disabled = currentPage <= 1;
             nextButton.disabled = currentPage >= totalPages;
             
             // Add click handlers for prev/next
-            prevButton.onclick = () => currentPage > 1 && fetchProducts(currentSearchTerm, currentPage - 1);
-            nextButton.onclick = () => currentPage < totalPages && fetchProducts(currentSearchTerm, currentPage + 1);
+            prevButton.onclick = () => {
+                if (currentPage > 1) {
+                    fetchProducts(currentSearchTerm, currentPage - 1);
+                }
+            };
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    fetchProducts(currentSearchTerm, currentPage + 1);
+                }
+            };
             
             // Generate page numbers
             let pagesHtml = '';
-            for (let i = 1; i <= totalPages; i++) {
-                if (
-                    i === 1 || // First page
-                    i === totalPages || // Last page
-                    (i >= currentPage - 2 && i <= currentPage + 2) // Pages around current page
-                ) {
-                    pagesHtml += `
-                        <button
-                            onclick="fetchProducts('${currentSearchTerm}', ${i})"
-                            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                                i === currentPage
-                                    ? 'z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
-                                    : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0'
-                            }"
-                        >
-                            ${i}
-                        </button>
-                    `;
-                } else if (
-                    (i === 2 && currentPage > 4) ||
-                    (i === totalPages - 1 && currentPage < totalPages - 3)
-                ) {
-                    pagesHtml += `
-                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
-                            ...
-                        </span>
-                    `;
-                }
-            }
             
+            // Function to add page button
+            const addPageButton = (pageNum) => `
+                <button
+                    onclick="fetchProducts('${currentSearchTerm}', ${pageNum})"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                        pageNum === currentPage
+                            ? 'z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+                            : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0'
+                    }"
+                >
+                    ${pageNum}
+                </button>
+            `;
+
+            // Always show first page
+            if (currentPage > 1) {
+                pagesHtml += addPageButton(1);
+            }
+
+            // Add ellipsis after first page if needed
+            if (currentPage > 3) {
+                pagesHtml += '<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">...</span>';
+            }
+
+            // Add pages around current page
+            for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+                pagesHtml += addPageButton(i);
+            }
+
+            // Add ellipsis before last page if needed
+            if (currentPage < totalPages - 2) {
+                pagesHtml += '<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">...</span>';
+            }
+
+            // Add last page if not already shown
+            if (currentPage < totalPages) {
+                pagesHtml += addPageButton(totalPages);
+            }
+
             paginationNumbers.innerHTML = pagesHtml;
         }
 
@@ -635,6 +666,85 @@
             debounceTimeout = setTimeout(() => {
                 fetchProducts(e.target.value, 1); // Reset to first page on search
             }, 300);
+        });
+
+        // Function to handle discount dates
+        function handleDiscountDates() {
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+            const discountStartDate = document.getElementById('discountStartDate');
+            const discountEndDate = document.getElementById('discountEndDate');
+
+            if (discountPercentage > 0) {
+                const now = new Date();
+                const thirtyDaysFromNow = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000));
+                
+                // Only set dates if they're not already set
+                if (!discountStartDate.value) {
+                    discountStartDate.value = now.toISOString().slice(0, 16);
+                }
+                if (!discountEndDate.value) {
+                    discountEndDate.value = thirtyDaysFromNow.toISOString().slice(0, 16);
+                }
+
+                // Enable the date fields
+                discountStartDate.disabled = false;
+                discountEndDate.disabled = false;
+            } else {
+                // Clear and disable the date fields
+                discountStartDate.value = '';
+                discountEndDate.value = '';
+                discountStartDate.disabled = true;
+                discountEndDate.disabled = true;
+            }
+        }
+
+        function calculateDiscountedPrice() {
+            const price = parseFloat(document.getElementById('productPrice').value) || 0;
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+            const discountedPriceInput = document.getElementById('discountedPrice');
+            
+            if (price <= 0 || discountPercentage < 0 || discountPercentage > 100) {
+                discountedPriceInput.value = price.toFixed(2);
+                handleDiscountDates(); // Handle dates when discount changes
+                return;
+            }
+            
+            const discountedPrice = price - (price * (discountPercentage / 100));
+            discountedPriceInput.value = discountedPrice.toFixed(2);
+
+            // Handle discount dates
+            handleDiscountDates();
+            
+            return discountedPrice.toFixed(2);
+        }
+
+        // Add event listeners for discount-related fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const discountPercentageInput = document.getElementById('discountPercentage');
+            const discountStartDate = document.getElementById('discountStartDate');
+            const discountEndDate = document.getElementById('discountEndDate');
+
+            if (discountPercentageInput) {
+                discountPercentageInput.addEventListener('input', calculateDiscountedPrice);
+            }
+
+            if (discountStartDate && discountEndDate) {
+                // Ensure end date is always after start date
+                discountStartDate.addEventListener('change', function() {
+                    if (discountEndDate.value && discountStartDate.value > discountEndDate.value) {
+                        discountEndDate.value = discountStartDate.value;
+                    }
+                    discountEndDate.min = discountStartDate.value;
+                });
+
+                // Ensure start date is always before end date
+                discountEndDate.addEventListener('change', function() {
+                    if (discountStartDate.value && discountEndDate.value < discountStartDate.value) {
+                        discountStartDate.value = discountEndDate.value;
+                    }
+                    discountStartDate.max = discountEndDate.value;
+                });
+            }
         });
     </script>
 }
